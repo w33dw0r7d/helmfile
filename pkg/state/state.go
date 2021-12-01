@@ -1961,6 +1961,24 @@ func (st *HelmState) DeleteReleases(affectedReleases *AffectedReleases, helm hel
 	})
 }
 
+func (st *HelmState) Rollback(helm helmexec.Interface, workerLimit int) []error {
+	return st.scatterGatherReleases(helm, workerLimit, func(release ReleaseSpec, workerIndex int) error {
+		if !release.Desired() {
+			return nil
+		}
+
+		st.ApplyOverrides(&release)
+
+		flags := []string{}
+		if helm.IsHelm3() && release.Namespace != "" {
+			flags = append(flags, "--namespace", release.Namespace)
+		}
+		flags = st.appendConnectionFlags(flags, helm, &release)
+
+		return helm.Rollback(st.createHelmContext(&release, workerIndex), release.Name, flags...)
+	})
+}
+
 type TestOpts struct {
 	Logs bool
 }

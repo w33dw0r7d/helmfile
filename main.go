@@ -549,6 +549,10 @@ func main() {
 					Name:  "wait-for-jobs",
 					Usage: `Override helmDefaults.waitForJobs setting "helm upgrade --install --wait-for-jobs"`,
 				},
+				cli.BoolFlag{
+					Name:  "global-atomic",
+					Usage: "Rollback All Release",
+				},
 			},
 			Action: action(func(a *app.App, c configImpl) error {
 				return a.Apply(c)
@@ -940,6 +944,10 @@ func (c configImpl) StateValuesFiles() []string {
 
 func (c configImpl) Interactive() bool {
 	return c.c.GlobalBool("interactive")
+}
+
+func (c configImpl) GlobalAtomic() bool {
+	return c.c.Bool("global-atomic")
 }
 
 func (c configImpl) NoColor() bool {

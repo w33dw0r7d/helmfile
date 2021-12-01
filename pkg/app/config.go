@@ -72,6 +72,7 @@ type ApplyConfigProvider interface {
 	concurrencyConfig
 	interactive
 	loggingConfig
+	globalAtomic
 }
 
 type SyncConfigProvider interface {
@@ -217,6 +218,10 @@ type loggingConfig interface {
 
 type interactive interface {
 	Interactive() bool
+}
+
+type globalAtomic interface {
+	GlobalAtomic() bool
 }
 
 type ListConfigProvider interface {

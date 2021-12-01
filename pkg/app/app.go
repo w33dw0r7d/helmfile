@@ -1385,6 +1385,18 @@ Do you really want to apply?
 		}
 	}
 
+	if c.GlobalAtomic() && len(syncErrs) != 0 {
+		var rs []state.ReleaseSpec
+		for _, r := range st.Releases {
+			if r2, ok := releasesToBeUpdated[state.ReleaseToID(&r)]; ok {
+				rs = append(rs, r2)
+			}
+		}
+
+		st.Releases = rs
+		st.Rollback(helm, c.Concurrency())
+	}
+
 	affectedReleases.DisplayAffectedReleases(c.Logger())
 	return true, true, syncErrs
 }

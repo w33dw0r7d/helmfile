@@ -221,6 +221,15 @@ func (helm *execer) ReleaseStatus(context HelmContext, name string, flags ...str
 	return err
 }
 
+func (helm *execer) Rollback(context HelmContext, name string, flags ...string) error {
+	helm.logger.Infof("Rollback %v", name)
+	preArgs := context.GetTillerlessArgs(helm)
+	env := context.getTillerlessEnv()
+	out, err := helm.exec(append(append(preArgs, "rollback", name), flags...), env)
+	helm.write(nil, out)
+	return err
+}
+
 func (helm *execer) List(context HelmContext, filter string, flags ...string) (string, error) {
 	helm.logger.Infof("Listing releases matching %v", filter)
 	preArgs := context.GetTillerlessArgs(helm)

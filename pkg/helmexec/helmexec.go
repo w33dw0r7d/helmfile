@@ -25,6 +25,7 @@ type Interface interface {
 	ChartExport(chart string, path string, flags ...string) error
 	Lint(name, chart string, flags ...string) error
 	ReleaseStatus(context HelmContext, name string, flags ...string) error
+	Rollback(context HelmContext, name string, flags ...string) error
 	DeleteRelease(context HelmContext, name string, flags ...string) error
 	TestRelease(context HelmContext, name string, flags ...string) error
 	List(context HelmContext, filter string, flags ...string) (string, error)
